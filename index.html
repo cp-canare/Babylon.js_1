@@ -61,7 +61,7 @@
             }
             .sidenav a:hover
             {
-            color: #f1f1f1;
+                color: #f1f1f1;
             }
             .active
             {
@@ -92,33 +92,35 @@
                 .sidenav a { font-size: 18px; }
             }
         </style>
+        <!-- Add icon library, icons at (https://fontawesome.com/v4/icons/) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <div id="sidenav" class="sidenav">
             <span href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="text-align:right; cursor:pointer;"></span>
-            <button type="button" class="placeholder-btn" onclick="closeNav()" >☰</button>
-            <button type="button" class="dropdown-btn">🧰 Links
-                <i class="fa fa-caret-down">▼</i>
+            <button type="button" class="placeholder-btn" onclick="closeNav()" ><i class="fa fa-bars fa-fw" aria-hidden="true"></i></button>
+            <button type="button" class="dropdown-btn"><i class="fa fa-folder-open" aria-hidden="true"></i> Links
+                <i class="fa fa-caret-down fa-fw" aria-hidden="true"></i>
             </button>
             <div class="dropdown-container">
                 <a href="test3D.aspx">
-                    🔙 test3D.aspx
+                    <i class="fa fa-code-fork fa-fw" aria-hidden="true"></i> test3D.aspx test3D.aspx
                 </a>
                 <a href="test3DViewToilet.aspx">
-                    🔙 test3DViewToilet.aspx
+                    <i class="fa fa-tint fa-fw" aria-hidden="true"></i> test3DViewToilet.aspx
                 </a>
                 <a href="test3DViewSinkv2.aspx">
-                    🔙 test3DViewSinkv2.aspx
+                    <i class="fa fa-bath fa-fw" aria-hidden="true"></i> test3DViewSinkv2.aspx
                 </a>
                 <a href="test3DViewCS4510Q.aspx">
-                    🔙 test3DViewCS4510Q.aspx
+                    <i class="fa fa-tint fa-fw" aria-hidden="true"></i> test3DViewCS4510Q.aspx
                 </a>
                 <a href="test3DViewToiletScan.aspx">
-                    🔙 test3DViewToiletScan.aspx
+                    <i class="fa fa-tint fa-fw" aria-hidden="true"></i> test3DViewToiletScan.aspx
                 </a>
                 <a href="test3DPlayground.aspx">
-                    🔙 test3DPlayground.aspx
+                    <i class="fa fa-play-circle fa-fw" aria-hidden="true"></i> test3DPlayground.aspx
                 </a>
                 <a href="test3DTest.aspx">
-                    🔙 test3DTest.aspx
+                    <i class="fa fa-file-text fa-fw" aria-hidden="true"></i> test3DTest.aspx
                 </a>
             </div>
             <a></a> <!-- EXTRA SIDE BUTTONS GO HERE -->
@@ -149,7 +151,7 @@
                 document.getElementById("menuNav").style.padding = "16px 8px 6px 16px"; /*TOP RIGHT BOTTOM LEFT*/
             }
         </script>
-        <div id="menuNav" class="menuNav"><span onclick="openNav()">☰</span></div>
+        <div id="menuNav" class="menuNav"><span onclick="openNav()"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></span></div>
         <!-- -------------------- END side_menu -------------------- -->
         <div class="main" style="margin-left: 55px;"> <!-- class="main" margin should match width of .menuNav -->
 
@@ -189,6 +191,21 @@
             </style>
 
             <div class="scene">
+                <div style="position: fixed; top: 0; right: 0; text-align: right;">
+                    <button type="button" id="btnFloorWalls" runat="server">add Floor & Walls</button>
+                    <br/>
+                    <button type="button" id="btnFloorWalls300" runat="server">add Floor & Walls 300</button>
+                    <br/>
+                    <button type="button" id="btnRemoveFloorWalls" runat="server">REMOVE Floor & Walls</button>
+                    <br/>
+                    <button type="button" id="btneditCS4510Q" runat="server">add/remove editCS4510Q.stl</button>
+                    <br/>
+                    <button type="button" id="btneditSinkv2" runat="server">add/remove editSinkv2.stl</button>
+                    <br/>
+                    <button type="button" id="btneditToilet" runat="server">add/remove editToilet.stl</button>
+                    <br/>
+                    <button type="button" id="btneditToiletScan" runat="server">add/remove editToiletScan.stl</button>
+                </div>
                 <canvas id="renderCanvas"></canvas>
             </div>
             
@@ -227,212 +244,202 @@
                     // This creates a light, aiming 1, 1, 0
                     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
-
-                    // The first parameter can be used to specify which mesh to import. Here we import all meshes
-                    //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWall3d.stl", scene, function (newMeshes) {
-                    BABYLON.SceneLoader.ImportMesh("", "./glb/", "editFloor3D.stl", scene, function (newMeshes) {
-                        // Set the target of the camera to the first imported mesh
-                        camera.target = newMeshes[0];
-
-                        let editWall3d = newMeshes[0];
-        
-                        editWall3d.physicsImpostor = new BABYLON.PhysicsImpostor(editWall3d, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0, restitution: 0.3 });
-
-                        var ticker = 0;
-                        let spheres = [];
-
-                        newMeshes[0].isPickable = false;
-                        newMeshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-
-                        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editWalls3D.stl", scene).then((result => {
-                            result.meshes[0].name = 'editWalls3D';
-                            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                            result.meshes[0].isPickable = false;
-                        }));
-
-                        //START DRAG
-                        var ground = newMeshes[0];
-                        var startingPoint;
-                        var getGroundPosition = function () {
-                            var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground; });
-                            if (pickinfo.hit) {
-                                return pickinfo.pickedPoint;
-                            }
-                            return null;
+                    let btnRemoveFloorWalls = document.getElementById("btnRemoveFloorWalls");
+                    btnRemoveFloorWalls.addEventListener("click", function ()
+                    {
+                        if (scene.getMeshByName(`editFloor3D`) != null) {
+                            scene.getMeshByName(`editFloor3D`).dispose();
+                            scene.getMeshByName(`editWalls3D`).dispose();
                         }
-                        var pointerDown = function (mesh) {
-                            currentMesh = mesh;
-                            startingPoint = getGroundPosition();
-                            if (startingPoint) { // we need to disconnect camera from canvas
-                                setTimeout(function () {
-                                    camera.detachControl(canvas);
-                                }, 0);
-                            }
-                        }
-                        var pointerUp = function () {
-                            if (startingPoint) {
-                                camera.attachControl(canvas, true);
-                                startingPoint = null;
-                                return;
-                            }
-                        }
-                        var pointerMove = function () {
-                            if (!startingPoint) {
-                                return;
-                            }
-                            var current = getGroundPosition();
-                            if (!current) {
-                                return;
-                            }
-                            var diff = current.subtract(startingPoint);
-                            currentMesh.position.addInPlace(diff);
-                            startingPoint = current;
-                        }
-                        scene.onPointerObservable.add((pointerInfo) => {
-                            switch (pointerInfo.type) {
-                                case BABYLON.PointerEventTypes.POINTERDOWN:
-                                    if (pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh != ground) {
-                                        gizmoManager.rotationGizmoEnabled = true;
-                                        pointerDown(pointerInfo.pickInfo.pickedMesh)
-                                    }
-                                    break;
-                                case BABYLON.PointerEventTypes.POINTERUP:
-                                    pointerUp();
-                                    break;
-                                case BABYLON.PointerEventTypes.POINTERMOVE:
-                                    pointerMove();
-                                    break;
-                            }
-                        });
-                        //END DRAG
-
-                        //init gizmoManager
-                        const gizmoManager = new BABYLON.GizmoManager(scene)
-
-                        //rotationGizmo, rotate y axis
-                        gizmoManager.rotationGizmoEnabled = true;
-                        gizmoManager.gizmos.rotationGizmo.xGizmo.isEnabled = false;
-                        gizmoManager.gizmos.rotationGizmo.zGizmo.isEnabled = false;
-                        gizmoManager.gizmos.rotationGizmo.snapDistance = Math.PI / 4;
-                        gizmoManager.gizmos.rotationGizmo.attachedNode = null;
-                        
-                        //positionGizmo, move x (left & right) & z (forward & backward)
-                        //gizmoManager.positionGizmoEnabled = true;
-                        //gizmoManager.gizmos.positionGizmo.yGizmo.isEnabled = false
-                        //gizmoManager.gizmos.positionGizmo.snapDistance = 1;
-
-                        /*
-                        //editCS4510Q.stl
-                        //BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editCS4510Q.stl", scene)
-                        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editCS4510Q.stl", scene)
-                            .then((result => {
-                                result.meshes[0].name = 'editCS4510Q';
-                                result.meshes[0].position.y = 0;
-                                result.meshes[0].position.x = -45;
-                                result.meshes[0].position.z = -55;
-                                result.meshes[0].physicsImpostor = new BABYLON.PhysicsImpostor(result.meshes[0], BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0, restitution: 0.3 });
-
-                                //result.meshes[0].scaling = new BABYLON.Vector3(2, 2, 2); //scaling to 2x size
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                                
-                            }));
-                        */
-                        /*
-                        //editSinkv2.stl
-                        //BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editSinkv2.stl", scene)
-                        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editSinkv2.stl", scene)
-                            .then((result => {
-                                result.meshes[0].name = 'editSinkv2';
-                                result.meshes[0].position.y = 50;
-                                result.meshes[0].position.x = 55;
-                                result.meshes[0].position.z = 65;
-                                result.meshes[0].physicsImpostor = new BABYLON.PhysicsImpostor(result.meshes[0], BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0, restitution: 0.3 });
-
-                                //result.meshes[0].scaling = new BABYLON.Vector3(2, 2, 2); //scaling to 2x size
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                                
-                            }));
-                        */
-                        /*
-                        //editToilet.stl
-                        //BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToilet.stl", scene)
-                        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editToilet.stl", scene)
-                            .then((result => {
-                                result.meshes[0].name = 'editToilet';
-                                result.meshes[0].position.y = 0;
-                                result.meshes[0].position.x = -50;
-                                result.meshes[0].position.z = 50;
-                                result.meshes[0].rotation.y = (Math.PI / 4) * 2;
-                                //result.meshes[0].rotation.y = 1.55; //rotation
-                                result.meshes[0].physicsImpostor = new BABYLON.PhysicsImpostor(result.meshes[0], BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0, restitution: 0.3 });
-
-                                //result.meshes[0].scaling = new BABYLON.Vector3(2, 2, 2); //scaling to 2x size
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                                
-                            }));
-                        */
-                        /*
-                        //editToiletScan.stl
-                        //BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToiletScan.stl", scene)
-                        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editToiletScan.stl", scene)
-                            .then((result => {
-                                result.meshes[0].name = 'editToiletScan';
-                                result.meshes[0].position.y = 0;
-                                result.meshes[0].position.x = 55;
-                                result.meshes[0].position.z = -50;
-                                result.meshes[0].rotation.y = (Math.PI / 4) * 6;
-                                //result.meshes[0].rotation.y = -1.55; //rotation
-                                result.meshes[0].physicsImpostor = new BABYLON.PhysicsImpostor(result.meshes[0], BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0, restitution: 0.3 });
-
-                                //result.meshes[0].scaling = new BABYLON.Vector3(2, 2, 2); //scaling to 2x size
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                                
-                            }));
-                        */
-
-                        // Our built-in 'sphere' shape. Params: name, subdivs, size, scene
-                        // var sphre = BABYLON.Mesh.CreateSphere("", 16, 1, scene);
-                        // sphre.position.y = 10;
-
-                        /*
-                        //create random spheres to test collision
-                        scene.registerBeforeRender(function () {
-                            if (ticker++ % 60) return;
-
-                            let s = BABYLON.MeshBuilder.CreateSphere("s", { diameter: 20 });
-                            s.position.y = 30;
-                            s.position.z = 0 + Math.random();
-                            s.position.x = 0 + Math.random();
-
-                            s.physicsImpostor = new BABYLON.PhysicsImpostor(s, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1 });
-                            spheres.push(s);
-
-                            spheres.forEach(function (sphere)
-                            {
-                                if (sphere.position.y < -50)
-                                {
-                                    sphere.dispose();
-                                }
-                            });
-    
-                            spheres = spheres.filter(s => !s.isDisposed());
-                        });
-                        */
                     });
 
-                    //START DROPDOWN source (https://playground.babylonjs.com/#H10NI4#12)
-                    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-                    var dropdownA = new Dropdown(advancedTexture, "30px", "180px");
-                    dropdownA.button.children[0].text = "Select Model";
-                    dropdownA.top = "0px"
-                    dropdownA.left = "0px";
-                    dropdownA.addOption(0, "CS4510Q.stl");
-                    dropdownA.addOption(1, "Sinkv2.stl");
-                    dropdownA.addOption(2, "Toilet.stl");
-                    dropdownA.addOption(3, "ToiletScan.stl");
+                    let btnFloorWalls = document.getElementById("btnFloorWalls");
+                    btnFloorWalls.addEventListener("click", function ()
+                    {
+                        if (scene.getMeshByName(`editFloor3D`) != null) {
+                            scene.getMeshByName(`editFloor3D`).dispose();
+                            scene.getMeshByName(`editWalls3D`).dispose();
+                        }
 
-                    // Child 0 / "Option A"
-                    dropdownA.options.children[0].onPointerClickObservable.add(function () {
+                        //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWall3d.stl", scene, function (newMeshes) {
+                        BABYLON.SceneLoader.ImportMesh("", "./glb/", "editFloor3D.stl", scene, function (newMeshes) {
+                            // Set the target of the camera to the first imported mesh
+                            camera.target = newMeshes[0];
+
+                            newMeshes[0].name = 'editFloor3D';
+                            newMeshes[0].isPickable = false;
+                            newMeshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+
+                            BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editWalls3D.stl", scene).then((result => {
+                                result.meshes[0].name = 'editWalls3D';
+                                result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+                                result.meshes[0].isPickable = false;
+                            }));
+
+                            //START DRAG
+                            var ground = newMeshes[0];
+                            var startingPoint;
+                            var getGroundPosition = function () {
+                                var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground; });
+                                if (pickinfo.hit) {
+                                    return pickinfo.pickedPoint;
+                                }
+                                return null;
+                            }
+                            var pointerDown = function (mesh) {
+                                currentMesh = mesh;
+                                startingPoint = getGroundPosition();
+                                if (startingPoint) { // we need to disconnect camera from canvas
+                                    setTimeout(function () {
+                                        camera.detachControl(canvas);
+                                    }, 0);
+                                }
+                            }
+                            var pointerUp = function () {
+                                if (startingPoint) {
+                                    camera.attachControl(canvas, true);
+                                    startingPoint = null;
+                                    return;
+                                }
+                            }
+                            var pointerMove = function () {
+                                if (!startingPoint) {
+                                    return;
+                                }
+                                var current = getGroundPosition();
+                                if (!current) {
+                                    return;
+                                }
+                                var diff = current.subtract(startingPoint);
+                                currentMesh.position.addInPlace(diff);
+                                startingPoint = current;
+                            }
+                            scene.onPointerObservable.add((pointerInfo) => {
+                                switch (pointerInfo.type) {
+                                    case BABYLON.PointerEventTypes.POINTERDOWN:
+                                        if (pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh != ground) {
+                                            gizmoManager.rotationGizmoEnabled = true;
+                                            pointerDown(pointerInfo.pickInfo.pickedMesh)
+                                        }
+                                        break;
+                                    case BABYLON.PointerEventTypes.POINTERUP:
+                                        pointerUp();
+                                        break;
+                                    case BABYLON.PointerEventTypes.POINTERMOVE:
+                                        pointerMove();
+                                        break;
+                                }
+                            });
+                            //END DRAG
+
+                            //init gizmoManager
+                            const gizmoManager = new BABYLON.GizmoManager(scene)
+
+                            //rotationGizmo, rotate y axis
+                            gizmoManager.rotationGizmoEnabled = true;
+                            gizmoManager.gizmos.rotationGizmo.xGizmo.isEnabled = false;
+                            gizmoManager.gizmos.rotationGizmo.zGizmo.isEnabled = false;
+                            gizmoManager.gizmos.rotationGizmo.snapDistance = Math.PI / 4;
+                            gizmoManager.gizmos.rotationGizmo.attachedNode = null;
+                        });
+                    });
+
+                    let btnFloorWalls300 = document.getElementById("btnFloorWalls300");
+                    btnFloorWalls300.addEventListener("click", function ()
+                    {
+                        if (scene.getMeshByName(`editFloor3D`) != null) {
+                            scene.getMeshByName(`editFloor3D`).dispose();
+                            scene.getMeshByName(`editWalls3D`).dispose();
+                        }
+
+                        //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWall3d.stl", scene, function (newMeshes) {
+                        BABYLON.SceneLoader.ImportMesh("", "./glb/", "editFloor3D300.stl", scene, function (newMeshes) {
+                            // Set the target of the camera to the first imported mesh
+                            camera.target = newMeshes[0];
+
+                            newMeshes[0].name = 'editFloor3D';
+                            newMeshes[0].isPickable = false;
+                            newMeshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+
+                            BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editWalls3D300.stl", scene).then((result => {
+                                result.meshes[0].name = 'editWalls3D';
+                                result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+                                result.meshes[0].isPickable = false;
+                            }));
+
+                            //START DRAG
+                            var ground = newMeshes[0];
+                            var startingPoint;
+                            var getGroundPosition = function () {
+                                var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground; });
+                                if (pickinfo.hit) {
+                                    return pickinfo.pickedPoint;
+                                }
+                                return null;
+                            }
+                            var pointerDown = function (mesh) {
+                                currentMesh = mesh;
+                                startingPoint = getGroundPosition();
+                                if (startingPoint) { // we need to disconnect camera from canvas
+                                    setTimeout(function () {
+                                        camera.detachControl(canvas);
+                                    }, 0);
+                                }
+                            }
+                            var pointerUp = function () {
+                                if (startingPoint) {
+                                    camera.attachControl(canvas, true);
+                                    startingPoint = null;
+                                    return;
+                                }
+                            }
+                            var pointerMove = function () {
+                                if (!startingPoint) {
+                                    return;
+                                }
+                                var current = getGroundPosition();
+                                if (!current) {
+                                    return;
+                                }
+                                var diff = current.subtract(startingPoint);
+                                currentMesh.position.addInPlace(diff);
+                                startingPoint = current;
+                            }
+                            scene.onPointerObservable.add((pointerInfo) => {
+                                switch (pointerInfo.type) {
+                                    case BABYLON.PointerEventTypes.POINTERDOWN:
+                                        if (pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh != ground) {
+                                            gizmoManager.rotationGizmoEnabled = true;
+                                            pointerDown(pointerInfo.pickInfo.pickedMesh)
+                                        }
+                                        break;
+                                    case BABYLON.PointerEventTypes.POINTERUP:
+                                        pointerUp();
+                                        break;
+                                    case BABYLON.PointerEventTypes.POINTERMOVE:
+                                        pointerMove();
+                                        break;
+                                }
+                            });
+                            //END DRAG
+
+                            //init gizmoManager
+                            const gizmoManager = new BABYLON.GizmoManager(scene)
+
+                            //rotationGizmo, rotate y axis
+                            gizmoManager.rotationGizmoEnabled = true;
+                            gizmoManager.gizmos.rotationGizmo.xGizmo.isEnabled = false;
+                            gizmoManager.gizmos.rotationGizmo.zGizmo.isEnabled = false;
+                            gizmoManager.gizmos.rotationGizmo.snapDistance = Math.PI / 4;
+                            gizmoManager.gizmos.rotationGizmo.attachedNode = null;
+                        });
+                    });
+
+
+
+                    // have button affect Babylon.js source (https://forum.babylonjs.com/t/how-to-communicate-between-an-external-button-and-babylon-scene/5885/6)
+                    let btneditCS4510Q = document.getElementById("btneditCS4510Q");
+                    btneditCS4510Q.addEventListener("click", function () {
                         if (scene.getMeshByName(`editCS4510Q`) != null) {
                             scene.getMeshByName(`editCS4510Q`).dispose();
                         }
@@ -445,7 +452,9 @@
                             }));
                         }
                     });
-                    dropdownA.options.children[1].onPointerClickObservable.add(function () {
+
+                    let btneditSinkv2 = document.getElementById("btneditSinkv2");
+                    btneditSinkv2.addEventListener("click", function () {
                         if (scene.getMeshByName(`editSinkv2`) != null) {
                             scene.getMeshByName(`editSinkv2`).dispose();
                         }
@@ -455,10 +464,13 @@
                                 result.meshes[0].position.y = 4;
                                 result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                                 //result.meshes[0].addBehavior(drag);
+                                //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
                             }));
                         }
                     });
-                    dropdownA.options.children[2].onPointerClickObservable.add(function () {
+
+                    let btneditToilet = document.getElementById("btneditToilet");
+                    btneditToilet.addEventListener("click", function () {
                         if (scene.getMeshByName(`editToilet`) != null) {
                             scene.getMeshByName(`editToilet`).dispose();
                         }
@@ -467,10 +479,13 @@
                                 result.meshes[0].name = 'editToilet';
                                 result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                                 //result.meshes[0].addBehavior(drag);
+                                //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
                             }));
                         }
                     });
-                    dropdownA.options.children[3].onPointerClickObservable.add(function () {
+
+                    let btneditToiletScan = document.getElementById("btneditToiletScan");
+                    btneditToiletScan.addEventListener("click", function () {
                         if (scene.getMeshByName(`editToiletScan`) != null) {
                             scene.getMeshByName(`editToiletScan`).dispose();
                         }
@@ -479,39 +494,103 @@
                                 result.meshes[0].name = 'editToiletScan';
                                 result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                                 //result.meshes[0].addBehavior(drag);
+                                //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
                             }));
                         }
                     });
-                    // END  DROPDOWN
 
-                    //var drag = new BABYLON.PointerDragBehavior({ dragPlaneNormal: new BABYLON.Vector3(0, 1, 0) });
-                    //drag.validateDrag = (targetPosition) => {
-                    //    if (targetPosition.x > 6) { targetPosition.x = 6 }
-                    //    if (targetPosition.x < -6) { targetPosition.x = -6 }
-                    //    if (targetPosition.z > 6) { targetPosition.z = 6 }
-                    //    if (targetPosition.z < -6) { targetPosition.z = -6 }
-                    //    else { return true }
-                    //}
 
-                    /*
-                    // Modify based on keypress
-                    document.onkeydown = (e) => {
-                        if (e.key == 'w' || e.key == 'a' || e.key == 's' || e.key == 'd') {
-                            if (e.key == 'w') {
-                                gizmoManager.positionGizmoEnabled = true;
-                            }
-                            if (e.key == 'a') {
-                                gizmoManager.gizmos.positionGizmo.x += 10;
-                            }
-                            if (e.key == 's') {
-                                gizmoManager.scaleGizmoEnabled = true;
-                            }
-                            if (e.key == 'd') {
-                                gizmoManager.boundingBoxGizmoEnabled = true;
-                            }
-                        }
-                    };
-                    */
+
+                    ////START DROPDOWN source (https://playground.babylonjs.com/#H10NI4#12)
+                    //var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+                    //var dropdownA = new Dropdown(advancedTexture, "30px", "180px");
+                    //dropdownA.button.children[0].text = "Select Model";
+                    //dropdownA.top = "0px"
+                    //dropdownA.left = "0px";
+                    //dropdownA.addOption(0, "CS4510Q.stl");
+                    //dropdownA.addOption(1, "Sinkv2.stl");
+                    //dropdownA.addOption(2, "Toilet.stl");
+                    //dropdownA.addOption(3, "ToiletScan.stl");
+
+                    //dropdownA.options.children[0].onPointerClickObservable.add(function () {
+                    //    if (scene.getMeshByName(`editCS4510Q`) != null) {
+                    //        scene.getMeshByName(`editCS4510Q`).dispose();
+                    //    }
+                    //    else {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editCS4510Q.stl", scene).then((result => {
+                    //            result.meshes[0].name = 'editCS4510Q';
+                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+                    //            //result.meshes[0].addBehavior(drag);
+                    //            //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
+                    //        }));
+                    //    }
+                    //});
+                    //dropdownA.options.children[1].onPointerClickObservable.add(function () {
+                    //    if (scene.getMeshByName(`editSinkv2`) != null) {
+                    //        scene.getMeshByName(`editSinkv2`).dispose();
+                    //    }
+                    //    else {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editSinkv2.stl", scene).then((result => {
+                    //            result.meshes[0].name = 'editSinkv2';
+                    //            result.meshes[0].position.y = 4;
+                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+                    //            //result.meshes[0].addBehavior(drag);
+                    //        }));
+                    //    }
+                    //});
+                    //dropdownA.options.children[2].onPointerClickObservable.add(function () {
+                    //    if (scene.getMeshByName(`editToilet`) != null) {
+                    //        scene.getMeshByName(`editToilet`).dispose();
+                    //    }
+                    //    else {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editToilet.stl", scene).then((result => {
+                    //            result.meshes[0].name = 'editToilet';
+                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+                    //            //result.meshes[0].addBehavior(drag);
+                    //        }));
+                    //    }
+                    //});
+                    //dropdownA.options.children[3].onPointerClickObservable.add(function () {
+                    //    if (scene.getMeshByName(`editToiletScan`) != null) {
+                    //        scene.getMeshByName(`editToiletScan`).dispose();
+                    //    }
+                    //    else {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editToiletScan.stl", scene).then((result => {
+                    //            result.meshes[0].name = 'editToiletScan';
+                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+                    //            //result.meshes[0].addBehavior(drag);
+                    //        }));
+                    //    }
+                    //});
+                    //// END  DROPDOWN
+
+                    //// add a button source (https://playground.babylonjs.com/#79ASTG)
+                    //let button = document.createElement("button");
+                    //button.textContent = "add/remove editCS4510Q.stl";
+                    //button.type = "button";
+                    //button.style.position = "fixed";
+                    //button.style.textAlign = "right";
+                    //button.style.top = "0";
+                    //button.style.right = "0";
+                    //button.style.zIndex = 1000;
+                    //button.addEventListener("click", function () {
+                    //    if (scene.getMeshByName(`editCS4510Q`) != null) {
+                    //        scene.getMeshByName(`editCS4510Q`).dispose();
+                    //    }
+                    //    else {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editCS4510Q.stl", scene).then((result => {
+                    //            result.meshes[0].name = 'editCS4510Q';
+                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+                    //            //result.meshes[0].addBehavior(drag);
+                    //            //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
+                    //        }));
+                    //    }
+                    //});
+                    //canvas.parentElement.appendChild(button);
+                    //// cleanup
+                    //scene.onDisposeObservable.add(() => {
+                    //    button.remove();
+                    //})
 
                     return scene;
                 };
