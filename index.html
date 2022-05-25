@@ -262,7 +262,7 @@
                         }
 
                         //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWall3d.stl", scene, function (newMeshes) {
-                        BABYLON.SceneLoader.ImportMesh("", "./glb/", "editFloor3D.stl", scene, function (newMeshes) {
+                        BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editFloor3D.stl", scene, function (newMeshes) {
                             // Set the target of the camera to the first imported mesh
                             camera.target = newMeshes[0];
 
@@ -270,7 +270,7 @@
                             newMeshes[0].isPickable = false;
                             newMeshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
 
-                            BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editWalls3D.stl", scene).then((result => {
+                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWalls3D.stl", scene).then((result => {
                                 result.meshes[0].name = 'editWalls3D';
                                 result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                                 result.meshes[0].isPickable = false;
@@ -353,7 +353,7 @@
                         }
 
                         //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWall3d.stl", scene, function (newMeshes) {
-                        BABYLON.SceneLoader.ImportMesh("", "./glb/", "editFloor3D300.stl", scene, function (newMeshes) {
+                        BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editFloor3D300.stl", scene, function (newMeshes) {
                             // Set the target of the camera to the first imported mesh
                             camera.target = newMeshes[0];
 
@@ -361,7 +361,7 @@
                             newMeshes[0].isPickable = false;
                             newMeshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
 
-                            BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editWalls3D300.stl", scene).then((result => {
+                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWalls3D300.stl", scene).then((result => {
                                 result.meshes[0].name = 'editWalls3D';
                                 result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                                 result.meshes[0].isPickable = false;
@@ -444,7 +444,7 @@
                             scene.getMeshByName(`editCS4510Q`).dispose();
                         }
                         else {
-                            BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editCS4510Q.stl", scene).then((result => {
+                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editCS4510Q.stl", scene).then((result => {
                                 result.meshes[0].name = 'editCS4510Q';
                                 result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                                 //result.meshes[0].addBehavior(drag);
@@ -459,7 +459,7 @@
                             scene.getMeshByName(`editSinkv2`).dispose();
                         }
                         else {
-                            BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editSinkv2.stl", scene).then((result => {
+                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editSinkv2.stl", scene).then((result => {
                                 result.meshes[0].name = 'editSinkv2';
                                 result.meshes[0].position.y = 4;
                                 result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
@@ -475,7 +475,7 @@
                             scene.getMeshByName(`editToilet`).dispose();
                         }
                         else {
-                            BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editToilet.stl", scene).then((result => {
+                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToilet.stl", scene).then((result => {
                                 result.meshes[0].name = 'editToilet';
                                 result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                                 //result.meshes[0].addBehavior(drag);
@@ -490,7 +490,7 @@
                             scene.getMeshByName(`editToiletScan`).dispose();
                         }
                         else {
-                            BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editToiletScan.stl", scene).then((result => {
+                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToiletScan.stl", scene).then((result => {
                                 result.meshes[0].name = 'editToiletScan';
                                 result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                                 //result.meshes[0].addBehavior(drag);
@@ -517,7 +517,7 @@
                     //        scene.getMeshByName(`editCS4510Q`).dispose();
                     //    }
                     //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editCS4510Q.stl", scene).then((result => {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editCS4510Q.stl", scene).then((result => {
                     //            result.meshes[0].name = 'editCS4510Q';
                     //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                     //            //result.meshes[0].addBehavior(drag);
@@ -530,7 +530,7 @@
                     //        scene.getMeshByName(`editSinkv2`).dispose();
                     //    }
                     //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editSinkv2.stl", scene).then((result => {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editSinkv2.stl", scene).then((result => {
                     //            result.meshes[0].name = 'editSinkv2';
                     //            result.meshes[0].position.y = 4;
                     //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
@@ -543,7 +543,7 @@
                     //        scene.getMeshByName(`editToilet`).dispose();
                     //    }
                     //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editToilet.stl", scene).then((result => {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToilet.stl", scene).then((result => {
                     //            result.meshes[0].name = 'editToilet';
                     //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                     //            //result.meshes[0].addBehavior(drag);
@@ -555,7 +555,7 @@
                     //        scene.getMeshByName(`editToiletScan`).dispose();
                     //    }
                     //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editToiletScan.stl", scene).then((result => {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToiletScan.stl", scene).then((result => {
                     //            result.meshes[0].name = 'editToiletScan';
                     //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                     //            //result.meshes[0].addBehavior(drag);
@@ -578,7 +578,7 @@
                     //        scene.getMeshByName(`editCS4510Q`).dispose();
                     //    }
                     //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "./glb/", "editCS4510Q.stl", scene).then((result => {
+                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editCS4510Q.stl", scene).then((result => {
                     //            result.meshes[0].name = 'editCS4510Q';
                     //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
                     //            //result.meshes[0].addBehavior(drag);
