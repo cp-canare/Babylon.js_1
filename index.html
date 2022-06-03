@@ -1,721 +1,680 @@
 <!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
+        <title>Babylon.js sample code</title>
 
-        <!-- -------------------- START side_menu -------------------- -->
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- Babylon.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+        <script src="https://preview.babylonjs.com/ammo.js"></script>
+        <script src="https://preview.babylonjs.com/cannon.js"></script>
+        <script src="https://preview.babylonjs.com/Oimo.js"></script>
+        <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+        <script src="https://preview.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
         <style>
-            body
-            {
-                font-family: "Lato", sans-serif;
-            }
-            .menuNav
-            {
-                height: 100%;
-                width: 32px;
-                position: fixed;
-                z-index: 1;
-                top: 0;
-                left: 0;
-                background-color: #1c75bc;
-                overflow-x: hidden;
-                
-                outline: none;
-                cursor: pointer;
-                text-align: left;
-                border: none;
-                font-size: 20px;
-                padding: 16px 8px 6px 16px; /*TOP RIGHT BOTTOM LEFT*/
-            }
-            .sidenav
-            {
-                height: 100%;
-                width: 0;
-                position: fixed;
-                z-index: 1;
-                top: 0;
-                left: 0;
-                background-color: #1c75bc;
-                overflow-x: hidden;
-                transition: 0.5s;
-                padding-top: 10px;
-            }
-            .sidenav a, .dropdown-btn, .placeholder-btn
-            {
-                padding: 6px 8px 6px 16px; /*TOP RIGHT BOTTOM LEFT*/
-                text-decoration: none;
-                font-size: 20px;
-                display: block;
-                transition: 0.3s;
-                border: none;
-                background: none;
+            html, body {
+                overflow: hidden;
                 width: 100%;
-                text-align: left;
-                cursor: pointer;
-                outline: none;
+                height: 100%;
+                margin: 0;
+                padding: 0;
             }
-            .sidenav a:hover
-            {
-                color: #f1f1f1;
-            }
-            .active
-            {
-                color: white;
-            }
-            .dropdown-container
-            {
-                display: none;
-                background-color: #1cbcb3;
-                padding-left: 8px;
-            }
-            .fa-caret-down
-            {
-                float: right;
-                padding-right: 8px;
-            }
-            .sidenav .closebtn
-            {
-                position: absolute;
-                top: 0;
-                right: 25px;
-                font-size: 30px;
-                margin-left: 50px;
-            }
-            @media screen and (max-height: 450px)
-            {
-                .sidenav { padding-top: 15px; }
-                .sidenav a { font-size: 18px; }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
             }
         </style>
-        <!-- Add icon library, icons at (https://fontawesome.com/v4/icons/) -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <div id="sidenav" class="sidenav">
-            <span href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="text-align:right; cursor:pointer;"></span>
-            <button type="button" class="placeholder-btn" onclick="closeNav()" ><i class="fa fa-bars fa-fw" aria-hidden="true"></i></button>
-            <button type="button" class="dropdown-btn"><i class="fa fa-folder-open" aria-hidden="true"></i> Links
-                <i class="fa fa-caret-down fa-fw" aria-hidden="true"></i>
-            </button>
-            <div class="dropdown-container">
-                <a href="test3D.aspx">
-                    <i class="fa fa-code-fork fa-fw" aria-hidden="true"></i> test3D.aspx test3D.aspx
-                </a>
-                <a href="test3DViewToilet.aspx">
-                    <i class="fa fa-tint fa-fw" aria-hidden="true"></i> test3DViewToilet.aspx
-                </a>
-                <a href="test3DViewSinkv2.aspx">
-                    <i class="fa fa-bath fa-fw" aria-hidden="true"></i> test3DViewSinkv2.aspx
-                </a>
-                <a href="test3DViewCS4510Q.aspx">
-                    <i class="fa fa-tint fa-fw" aria-hidden="true"></i> test3DViewCS4510Q.aspx
-                </a>
-                <a href="test3DViewToiletScan.aspx">
-                    <i class="fa fa-tint fa-fw" aria-hidden="true"></i> test3DViewToiletScan.aspx
-                </a>
-                <a href="test3DPlayground.aspx">
-                    <i class="fa fa-play-circle fa-fw" aria-hidden="true"></i> test3DPlayground.aspx
-                </a>
-                <a href="test3DTest.aspx">
-                    <i class="fa fa-file-text fa-fw" aria-hidden="true"></i> test3DTest.aspx
-                </a>
-            </div>
-            <a></a> <!-- EXTRA SIDE BUTTONS GO HERE -->
-        </div>
-        <script>
-            var dropdown = document.getElementsByClassName("dropdown-btn");
-            var i;
-            for (i = 0; i < dropdown.length; i++) {
-                dropdown[i].addEventListener("click", function () {
-                    this.classList.toggle("active");
-                    var dropdownContent = this.nextElementSibling;
-                    if (dropdownContent.style.display === "block") {
-                        dropdownContent.style.display = "none";
-                    } else {
-                        dropdownContent.style.display = "block";
+    </head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        }
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        var createScene = function () {
+
+    console.log = function () { }
+
+    // This creates a basic Babylon Scene object (non-mesh)
+    const scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color3(211 / 255, 211 / 255, 211 / 255);
+
+    //var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/environment.dds", scene);
+    var hdrTexture = new BABYLON.HDRCubeTexture("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/room.hdr", scene, 512);
+    //var hdrTexture = new BABYLON.CubeTexture("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/skybox", scene);
+    var currentSkybox = scene.createDefaultSkybox(hdrTexture, true);
+
+    //enable Physics
+    scene.enablePhysics();
+
+    // ArcRotateCamera, rotating camera
+    const camera = new BABYLON.ArcRotateCamera("camera", (Math.PI / 4) * 8, Math.PI / 2.5, 5, new BABYLON.Vector3(0, 0, 0));
+
+    // This attaches the camera to the canvas
+    camera.attachControl(canvas, true);
+
+    camera.lowerBetaLimit = 0.1;
+    camera.upperBetaLimit = (Math.PI / 2) * 0.9;
+    camera.lowerRadiusLimit = 30;
+    camera.upperRadiusLimit = 10;
+    camera.wheelPrecision = 100.00;
+    scene.activeCamera.pinchDeltaPercentage = 0.00001;
+    scene.activeCamera.lowerRadiusLimit = 1;
+
+    // This creates a light, aiming 1, 1, 0
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+    //START_SCENE_DROPDOWN
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    var dropdownA = new Dropdown(advancedTexture, "40px", "180px");
+    dropdownA.button.children[0].text = "Select Scene";
+    dropdownA.top = "0px"
+    dropdownA.left = "180px";
+    dropdownA.addOption(0, "editFloor3D.stl");
+    dropdownA.addOption(1, "editFloor3D300.stl");
+    dropdownA.addOption(2, "editRoom_floor.glb");
+    // Child 0 / "Option A"
+    dropdownA.options.children[0].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('editFloor3D') != null) {
+            scene.getMeshByName('editFloor3D').dispose();
+            scene.getMeshByName('editWalls3D').dispose();
+        }
+        //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "FILENAME", scene, function (newMeshes) {
+        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editFloor3D.stl", scene).then((result => {
+            camera.target.copyFrom(result.meshes[0].position);
+            camera.target.y += 1;
+            //scene.debugLayer.show(); //show Inspector
+            result.meshes[0].name = 'editFloor3D';
+            for (var i = 0; i < result.meshes.length; i++) { result.meshes[i].isPickable = false; }
+            result.meshes[0].scaling = new BABYLON.Vector3(1.5 / 100, 1.5 / 100, 1.5 / 100); //scaling to 1.5% size
+            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWalls3D.stl", scene).then((result => {
+                result.meshes[0].name = 'editWalls3D';
+                for (var i = 0; i < result.meshes.length; i++) { result.meshes[i].isPickable = false; }
+                result.meshes[0].scaling = new BABYLON.Vector3(1.5 / 100, 1.5 / 100, 1.5 / 100); //scaling to 1.5% size
+            }));
+            dragModel(result.meshes[0]); //dragFunction(ground);
+            //for (var i = 1; i < result.meshes.length; i++) { dragModel(result.meshes[i]); } //works, movement is not smooth
+        }));
+        dropdownA.selected = 0;
+    });
+    dropdownA.options.children[1].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('editFloor3D') != null) {
+            scene.getMeshByName('editFloor3D').dispose();
+            scene.getMeshByName('editWalls3D').dispose();
+        }
+        //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "FILENAME", scene, function (newMeshes) {
+        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editFloor3D300.stl", scene).then((result => {
+            //result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+            camera.target.copyFrom(result.meshes[0].position);
+            camera.target.y += 1;
+            //scene.debugLayer.show(); //show Inspector
+            result.meshes[0].name = 'editFloor3D';
+            for (var i = 0; i < result.meshes.length; i++) { result.meshes[i].isPickable = false; }
+            result.meshes[0].scaling = new BABYLON.Vector3(1.5 / 100, 1.5 / 100, 1.5 / 100); //scaling to 1.5% size
+            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWalls3D300.stl", scene).then((result => {
+                //result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+                result.meshes[0].name = 'editWalls3D';
+                for (var i = 0; i < result.meshes.length; i++) { result.meshes[i].isPickable = false; }
+                result.meshes[0].scaling = new BABYLON.Vector3(1.5 / 100, 1.5 / 100, 1.5 / 100); //scaling to 1.5% size
+            }));
+            dragModel(result.meshes[0]); //dragFunction(ground);
+            //for (var i = 1; i < result.meshes.length; i++) { dragModel(result.meshes[i]); } //works, movement is not smooth
+        }));
+    });
+    dropdownA.options.children[2].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('editFloor3D') != null) {
+            scene.getMeshByName('editFloor3D').dispose();
+            scene.getMeshByName('editWalls3D').dispose();
+        }
+        //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "FILENAME", scene, function (newMeshes) {
+        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editRoom_floor.glb", scene).then((result => {
+            //result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+            camera.target.copyFrom(result.meshes[0].position);
+            camera.target.y += 1;
+            //scene.debugLayer.show(); //show Inspector
+            result.meshes[0].name = 'editFloor3D';
+            for (var i = 0; i < result.meshes.length; i++) { result.meshes[i].isPickable = false; }
+            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editRoom_wall.glb", scene).then((result => {
+                //result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
+                result.meshes[0].name = 'editWalls3D';
+                for (var i = 0; i < result.meshes.length; i++) { result.meshes[i].isPickable = false; }
+            }));
+            dragModel(result.meshes[1]); //dragFunction(ground);
+            //for (var i = 1; i < result.meshes.length; i++) { dragModel(result.meshes[i]); } //works, movement is not smooth
+        }));
+    });
+    //END_SCENE_DROPDOWN
+
+    //START_CLEAR
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    var btnClear = BABYLON.GUI.Button.CreateSimpleButton("btnClear", "Clear");
+    btnClear.width = "180px";
+    btnClear.height = "40px";
+    btnClear.color = "black";
+    btnClear.background = "white";
+    btnClear.textBlock = "";
+    btnClear.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    btnClear.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    btnClear.onPointerUpObservable.add(function () {
+        //alert("you did it!");
+        while (scene.meshes.length >= 2) {
+            scene.meshes[scene.meshes.length - 1].dispose();
+        }
+    });
+    advancedTexture.addControl(btnClear);
+    //END_CLEAR
+
+    //START_MODEL_DROPDOWN
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    var dropdownA = new Dropdown(advancedTexture, "40px", "180px");
+    dropdownA.button.children[0].text = "Select Model";
+    dropdownA.top = "0px"
+    dropdownA.left = "0px";
+    dropdownA.addOption(0, "CS4510Q.stl");
+    dropdownA.addOption(1, "Sinkv2.stl");
+    dropdownA.addOption(2, "Toilet.stl");
+    dropdownA.addOption(3, "ToiletScan.stl");
+    dropdownA.addOption(4, "Draco CS4510Q");
+    dropdownA.addOption(5, "Draco editSinkv2");
+    dropdownA.addOption(6, "Draco Toilet");
+    dropdownA.addOption(7, "Draco ToiletScan");
+    dropdownA.addOption(8, "Toilet_Shade.glb");
+    // Child 0 / "Option A"
+    dropdownA.options.children[0].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('editCS4510Q') != null) {
+            scene.getMeshByName('editCS4510Q').dispose();
+        }
+        else {
+            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editCS4510Q.stl", scene,
+                function (event) { loadingMessage(); }).then((result => {
+                    bottomLine.text = "";
+                    result.meshes[0].name = 'editCS4510Q';
+                    result.meshes[0].isPickable = true;
+                    result.meshes[0].scaling = new BABYLON.Vector3(0.015, 0.015, 0.015); //scaling to 1.5% size
+                }));
+        }
+    });
+    dropdownA.options.children[1].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('editSinkv2') != null) {
+            scene.getMeshByName('editSinkv2').dispose();
+        }
+        else {
+            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editSinkv2.stl", scene,
+                function (event) { loadingMessage(); }).then((result => {
+                    bottomLine.text = "";
+                    result.meshes[0].name = 'editSinkv2';
+                    result.meshes[0].isPickable = true;
+                    result.meshes[0].position.y = 0.95;
+                    result.meshes[0].scaling = new BABYLON.Vector3(0.015, 0.015, 0.015); //scaling to 1.5% size
+                }));
+        }
+    });
+    dropdownA.options.children[2].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('editToilet') != null) {
+            scene.getMeshByName('editToilet').dispose();
+        }
+        else {
+            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToilet.stl", scene,
+                function (event) { loadingMessage(); }).then((result => {
+                    bottomLine.text = "";
+                    result.meshes[0].name = 'editToilet';
+                    result.meshes[0].isPickable = true;
+                    result.meshes[0].scaling = new BABYLON.Vector3(0.015, 0.015, 0.015); //scaling to 1.5% size
+                }));
+        }
+    });
+    dropdownA.options.children[3].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('editToiletScan') != null) {
+            scene.getMeshByName('editToiletScan').dispose();
+        }
+        else {
+            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToiletScan.stl", scene,
+                function (event) { loadingMessage(); }).then((result => {
+                    bottomLine.text = "";
+                    result.meshes[0].name = 'editToiletScan';
+                    result.meshes[0].isPickable = true;
+                    result.meshes[0].scaling = new BABYLON.Vector3(0.015, 0.015, 0.015); //scaling to 1.5% size
+                }));
+        }
+    });
+    dropdownA.options.children[4].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('DracoCS4510Q') != null) {
+            scene.getMeshByName('DracoCS4510Q').dispose();
+        }
+        else {
+            BABYLON.Tools.LoadFile("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/editCS4510Q.stl.drc", async function (data) {
+                var dracoCompression = new BABYLON.DracoCompression();
+                var vertexData = await dracoCompression.decodeMeshAsync(data);
+                var mesh = new BABYLON.Mesh("dracoMesh", scene);
+                var geometry = new BABYLON.Geometry("dracoGeometry", scene, vertexData, undefined, mesh);
+                mesh.material = new BABYLON.PBRMaterial("material", scene);
+                mesh.material.sideOrientation = BABYLON.Material.CounterClockWiseSideOrientation;
+                mesh.material.metallic = 0;
+                mesh.name = 'DracoCS4510Q';
+                mesh.scaling = new BABYLON.Vector3(1.5 / 100, 1.5 / 100, 1.5 / 100); //scaling to 1.5% size
+                var edit1 = mesh;
+                edit1.rotation = new BABYLON.Vector3((Math.PI / 4) * 6, 0, 0);
+                edit1.bakeCurrentTransformIntoVertices();
+                mesh.overrideMaterialSideOrientation = scene.useRightHandedSystem ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;
+                bottomLine.text = "";
+            }, function (event) { loadingMessage(); }, undefined, true);
+        }
+    });
+    dropdownA.options.children[5].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('DracoSinkv2') != null) {
+            scene.getMeshByName('DracoSinkv2').dispose();
+        }
+        else {
+            BABYLON.Tools.LoadFile("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/editSinkv2.stl.drc", async function (data) {
+                var dracoCompression = new BABYLON.DracoCompression();
+                var vertexData = await dracoCompression.decodeMeshAsync(data);
+                var mesh = new BABYLON.Mesh("dracoMesh", scene);
+                var geometry = new BABYLON.Geometry("dracoGeometry", scene, vertexData, undefined, mesh);
+                mesh.material = new BABYLON.PBRMaterial("material", scene);
+                mesh.material.sideOrientation = BABYLON.Material.CounterClockWiseSideOrientation;
+                mesh.material.metallic = 0;
+                mesh.name = 'DracoSinkv2';
+                mesh.scaling = new BABYLON.Vector3(1.5 / 100, 1.5 / 100, 1.5 / 100); //scaling to 1.5% size
+                var edit1 = mesh;
+                edit1.rotation = new BABYLON.Vector3((Math.PI / 4) * 6, 0, 0);
+                edit1.bakeCurrentTransformIntoVertices();
+                mesh.overrideMaterialSideOrientation = scene.useRightHandedSystem ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;
+                bottomLine.text = "";
+            }, function (event) { loadingMessage(); }, undefined, true);
+        }
+    });
+    dropdownA.options.children[6].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('DracoToilet') != null) {
+            scene.getMeshByName('DracoToilet').dispose();
+        }
+        else {
+            BABYLON.Tools.LoadFile("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/editToilet.stl.drc", async function (data) {
+                var dracoCompression = new BABYLON.DracoCompression();
+                var vertexData = await dracoCompression.decodeMeshAsync(data);
+                var mesh = new BABYLON.Mesh("dracoMesh", scene);
+                var geometry = new BABYLON.Geometry("dracoGeometry", scene, vertexData, undefined, mesh);
+                mesh.material = new BABYLON.PBRMaterial("material", scene);
+                mesh.material.sideOrientation = BABYLON.Material.CounterClockWiseSideOrientation;
+                mesh.material.metallic = 0;
+                mesh.name = 'DracoToilet';
+                mesh.scaling = new BABYLON.Vector3(1.5 / 100, 1.5 / 100, 1.5 / 100); //scaling to 1.5% size
+                var edit1 = mesh;
+                edit1.rotation = new BABYLON.Vector3((Math.PI / 4) * 6, 0, 0);
+                edit1.bakeCurrentTransformIntoVertices();
+                mesh.overrideMaterialSideOrientation = scene.useRightHandedSystem ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;
+                bottomLine.text = "";
+            }, function (event) { loadingMessage(); }, undefined, true);
+        }
+    });
+    dropdownA.options.children[7].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('DracoToiletScan') != null) {
+            scene.getMeshByName('DracoToiletScan').dispose();
+        }
+        else {
+            BABYLON.Tools.LoadFile("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/editToiletScan.stl.drc", async function (data) {
+                var dracoCompression = new BABYLON.DracoCompression();
+                var vertexData = await dracoCompression.decodeMeshAsync(data);
+                var mesh = new BABYLON.Mesh("dracoMesh", scene);
+                var geometry = new BABYLON.Geometry("dracoGeometry", scene, vertexData, undefined, mesh);
+                mesh.material = new BABYLON.PBRMaterial("material", scene);
+                mesh.material.sideOrientation = BABYLON.Material.CounterClockWiseSideOrientation;
+                mesh.material.metallic = 0;
+                mesh.name = 'DracoToiletScan';
+                mesh.scaling = new BABYLON.Vector3(1.5 / 100, 1.5 / 100, 1.5 / 100); //scaling to 1.5% size
+                var edit1 = mesh;
+                edit1.rotation = new BABYLON.Vector3((Math.PI / 4) * 6, 0, 0);
+                edit1.bakeCurrentTransformIntoVertices();
+                mesh.overrideMaterialSideOrientation = scene.useRightHandedSystem ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;
+                bottomLine.text = "";
+            }, function (event) { loadingMessage(); }, undefined, true);
+        }
+    });
+    dropdownA.options.children[8].onPointerClickObservable.add(function () {
+        if (scene.getMeshByName('Toilet_Shade') != null) {
+            scene.getMeshByName('Toilet_Shade').dispose();
+        }
+        else {
+            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "Toilet_Shade.glb", scene,
+                function (event) { loadingMessage(); }).then((result => {
+                    bottomLine.text = "";
+                    result.meshes[0].name = 'Toilet_Shade';
+
+                    var edit1 = result.meshes[0];
+                    edit1.scaling = new BABYLON.Vector3(300 / 100, 300 / 100, 300 / 100); //scaling to 300% size
+                    edit1.rotation = new BABYLON.Vector3(0, (Math.PI / 4) * -0.6, 0);
+                    edit1.position.x = -0.5;
+                    edit1.position.z = -0.3;
+                    edit1.bakeCurrentTransformIntoVertices();
+                }));
+        }
+    });
+    //END_MODEL_DROPDOWN
+
+    //scene.debugLayer.show(); //show Inspector
+
+    // Google/Draco loadFile Function
+    BABYLON.DracoCompression.Configuration = {
+        decoder: {
+            wasmUrl: "https://cdn.jsdelivr.net/gh/google/draco/javascript/draco_decoder.js",
+            wasmBinaryUrl: "https://cdn.jsdelivr.net/gh/google/draco/javascript/draco_decoder.wasm",
+            fallbackUrl: "https://cdn.jsdelivr.net/gh/google/draco/javascript/draco_wasm_wrapper.js",
+        }
+    }; // Google/Draco loadFile Function
+
+
+
+    //init STL & GLB gizmoManager
+    const gizmoManager = new BABYLON.GizmoManager(scene)
+
+    // STL & GLB rotationGizmo, rotate y axis
+    gizmoManager.rotationGizmoEnabled = true;
+    gizmoManager.gizmos.rotationGizmo.xGizmo.isEnabled = false;
+    gizmoManager.gizmos.rotationGizmo.zGizmo.isEnabled = false;
+    gizmoManager.gizmos.rotationGizmo.snapDistance = Math.PI / 4;
+    gizmoManager.gizmos.rotationGizmo.attachedNode = null;
+
+    // STL & GLB positionGizmo, move along x, y, z axis
+    gizmoManager.positionGizmoEnabled = true;
+    gizmoManager.gizmos.positionGizmo.xGizmo.isEnabled = false;
+    gizmoManager.gizmos.positionGizmo.zGizmo.isEnabled = false;
+    gizmoManager.gizmos.positionGizmo.yGizmo.dragBehavior.onDragObservable.add(() => {
+        //set floor to y = 0, stop mesh from going below y = 0
+        if (gizmoManager.gizmos.positionGizmo.attachedMesh.position.y < 0) { gizmoManager.gizmos.positionGizmo.attachedMesh.position.y = 0; }
+        //set ceiling to y = 2, stop mesh from going above y = 2
+        if (gizmoManager.gizmos.positionGizmo.attachedMesh.position.y > 2) { gizmoManager.gizmos.positionGizmo.attachedMesh.position.y = 2; }
+    });
+
+    //init DRC gizmoManager
+    const gizmoManagerDRC = new BABYLON.GizmoManager(scene)
+
+    // STL & GLB rotationGizmo, rotate y axis
+    gizmoManagerDRC.rotationGizmoEnabled = true;
+    gizmoManagerDRC.gizmos.rotationGizmo.xGizmo.isEnabled = false;
+    gizmoManagerDRC.gizmos.rotationGizmo.yGizmo.isEnabled = false;
+    gizmoManagerDRC.gizmos.rotationGizmo.snapDistance = Math.PI / 4;
+    gizmoManagerDRC.gizmos.rotationGizmo.attachedNode = null;
+
+    // STL & GLB positionGizmo, move along x, y, z axis
+    gizmoManagerDRC.positionGizmoEnabled = true;
+    gizmoManagerDRC.gizmos.positionGizmo.xGizmo.isEnabled = false;
+    gizmoManagerDRC.gizmos.positionGizmo.yGizmo.isEnabled = false;
+    gizmoManagerDRC.gizmos.positionGizmo.zGizmo.dragBehavior.onDragObservable.add(() => {
+        //set floor to y = 0, stop mesh from going below y = 0
+        if (gizmoManagerDRC.gizmos.positionGizmo.attachedMesh.position.y < 0) { gizmoManagerDRC.gizmos.positionGizmo.attachedMesh.position.y = 0; }
+        //set ceiling to y = 2, stop mesh from going above y = 2
+        if (gizmoManagerDRC.gizmos.positionGizmo.attachedMesh.position.y > 2) { gizmoManagerDRC.gizmos.positionGizmo.attachedMesh.position.y = 2; }
+    });
+
+    function dragModel(ground) { //DRAG Model on Ground
+        var startingPoint;
+        var getGroundPosition = function () {
+            var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground; });
+            if (pickinfo.hit) {
+                return pickinfo.pickedPoint;
+            }
+            return null;
+        }
+        var pointerDown = function (mesh) {
+            currentMesh = mesh;
+            startingPoint = getGroundPosition();
+            if (startingPoint) { // we need to disconnect camera from canvas
+                setTimeout(function () {
+                    camera.detachControl(canvas);
+                }, 0);
+            }
+        }
+        var pointerUp = function () {
+            if (startingPoint) {
+                camera.attachControl(canvas, true);
+                startingPoint = null;
+                return;
+            }
+        }
+        var pointerMove = function () {
+            if (!startingPoint) {
+                return;
+            }
+            var current = getGroundPosition();
+            if (!current) {
+                return;
+            }
+            var diff = current.subtract(startingPoint);
+            currentMesh.position.addInPlace(diff);
+            startingPoint = current;
+        }
+        scene.onPointerObservable.add((pointerInfo) => {
+            switch (pointerInfo.type) {
+                case BABYLON.PointerEventTypes.POINTERDOWN:
+                    if (pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh != ground) {
+                        gizmoManager.rotationGizmoEnabled = true;
+                        gizmoManager.positionGizmoEnabled = true;
+                        gizmoManagerDRC.positionGizmoEnabled = false;
+                        gizmoManagerDRC.rotationGizmoEnabled = false;
+                        if (pointerInfo.pickInfo.pickedMesh.name.includes('Circle.007')) {
+                            pointerDown(scene.getMeshByName('Toilet_Shade'))
+                        }
+                        else {
+                            pointerDown(pointerInfo.pickInfo.pickedMesh)
+                        }
                     }
-                });
-            }
-            function openNav() {
-                document.getElementById("sidenav").style.width = "250px";
-                document.getElementById("menuNav").style.width = "0";
-                document.getElementById("menuNav").style.padding = "0px 0px 0px 0px"; /*TOP RIGHT BOTTOM LEFT*/
-            }
-
-            function closeNav() {
-                document.getElementById("sidenav").style.width = "0";
-                document.getElementById("menuNav").style.width = "30px";
-                document.getElementById("menuNav").style.padding = "16px 8px 6px 16px"; /*TOP RIGHT BOTTOM LEFT*/
-            }
-        </script>
-        <div id="menuNav" class="menuNav"><span onclick="openNav()"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></span></div>
-        <!-- -------------------- END side_menu -------------------- -->
-        <div class="main" style="margin-left: 55px;"> <!-- class="main" margin should match width of .menuNav -->
-
-            <style></style>
-            <script></script>
-
-            <!-- ------------------------------------------------------- START Babylon.js ------------------------------------------------------- -->
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
-            <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
-            <script src="https://preview.babylonjs.com/ammo.js"></script>
-            <script src="https://preview.babylonjs.com/cannon.js"></script>
-            <script src="https://preview.babylonjs.com/Oimo.js"></script>
-            <script src="https://preview.babylonjs.com/earcut.min.js"></script>
-            <script src="https://preview.babylonjs.com/babylon.js"></script>
-            <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
-            <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
-            <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
-            <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
-            <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
-            <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
-            <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
-    
-            <style>
-                .scene
-                {
-                    width: calc(100vw - 70px);
-                    height: calc(100vh - 16px);
-                    overflow: hidden;
-                }
-                #renderCanvas
-                {
-                    width: 100%;
-                    height: 100%;
-                    touch-action: none;
-                }
-            </style>
-
-            <div class="scene">
-                <div style="position: fixed; top: 0; right: 0; text-align: right;">
-                    <button type="button" id="btnFloorWalls" runat="server">add Floor & Walls</button>
-                    <br/>
-                    <button type="button" id="btnFloorWalls300" runat="server">add Floor & Walls 300</button>
-                    <br/>
-                    <button type="button" id="btnRemoveFloorWalls" runat="server">REMOVE Floor & Walls</button>
-                    <br/>
-                    <button type="button" id="btneditCS4510Q" runat="server">add/remove editCS4510Q.stl</button>
-                    <br/>
-                    <button type="button" id="btneditSinkv2" runat="server">add/remove editSinkv2.stl</button>
-                    <br/>
-                    <button type="button" id="btneditToilet" runat="server">add/remove editToilet.stl</button>
-                    <br/>
-                    <button type="button" id="btneditToiletScan" runat="server">add/remove editToiletScan.stl</button>
-                </div>
-                <canvas id="renderCanvas"></canvas>
-            </div>
-            
-            <script>
-                var canvas = document.getElementById("renderCanvas");
-
-                var startRenderLoop = function (engine, canvas)
-                {
-                    engine.runRenderLoop(function ()
-                    {
-                        if (sceneToRender && sceneToRender.activeCamera)
-                        {
-                            sceneToRender.render();
-                        }
-                    });
-                }
-
-                var engine = null;
-                var scene = null;
-                var sceneToRender = null;
-                var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
-                const createScene = () => {
-
-                    // This creates a basic Babylon Scene object (non-mesh)
-                    const scene = new BABYLON.Scene(engine);
-
-                    //enable Physics
-                    scene.enablePhysics();
-
-                    // ArcRotateCamera, rotating camera
-                    const camera = new BABYLON.ArcRotateCamera("camera", (Math.PI / 4) * 8, Math.PI / 2.5, 30, new BABYLON.Vector3(0, 0, 0));
-
-                    // This attaches the camera to the canvas
-                    camera.attachControl(canvas, true);
-
-                    // This creates a light, aiming 1, 1, 0
-                    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
-
-                    let btnRemoveFloorWalls = document.getElementById("btnRemoveFloorWalls");
-                    btnRemoveFloorWalls.addEventListener("click", function ()
-                    {
-                        if (scene.getMeshByName(`editFloor3D`) != null) {
-                            scene.getMeshByName(`editFloor3D`).dispose();
-                            scene.getMeshByName(`editWalls3D`).dispose();
-                        }
-                    });
-
-                    let btnFloorWalls = document.getElementById("btnFloorWalls");
-                    btnFloorWalls.addEventListener("click", function ()
-                    {
-                        if (scene.getMeshByName(`editFloor3D`) != null) {
-                            scene.getMeshByName(`editFloor3D`).dispose();
-                            scene.getMeshByName(`editWalls3D`).dispose();
-                        }
-
-                        //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWall3d.stl", scene, function (newMeshes) {
-                        BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editFloor3D.stl", scene, function (newMeshes) {
-                            // Set the target of the camera to the first imported mesh
-                            camera.target = newMeshes[0];
-
-                            newMeshes[0].name = 'editFloor3D';
-                            newMeshes[0].isPickable = false;
-                            newMeshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-
-                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWalls3D.stl", scene).then((result => {
-                                result.meshes[0].name = 'editWalls3D';
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                                result.meshes[0].isPickable = false;
-                            }));
-
-                            //START DRAG
-                            var ground = newMeshes[0];
-                            var startingPoint;
-                            var getGroundPosition = function () {
-                                var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground; });
-                                if (pickinfo.hit) {
-                                    return pickinfo.pickedPoint;
-                                }
-                                return null;
-                            }
-                            var pointerDown = function (mesh) {
-                                currentMesh = mesh;
-                                startingPoint = getGroundPosition();
-                                if (startingPoint) { // we need to disconnect camera from canvas
-                                    setTimeout(function () {
-                                        camera.detachControl(canvas);
-                                    }, 0);
-                                }
-                            }
-                            var pointerUp = function () {
-                                if (startingPoint) {
-                                    camera.attachControl(canvas, true);
-                                    startingPoint = null;
-                                    return;
-                                }
-                            }
-                            var pointerMove = function () {
-                                if (!startingPoint) {
-                                    return;
-                                }
-                                var current = getGroundPosition();
-                                if (!current) {
-                                    return;
-                                }
-                                var diff = current.subtract(startingPoint);
-                                currentMesh.position.addInPlace(diff);
-                                startingPoint = current;
-                            }
-                            scene.onPointerObservable.add((pointerInfo) => {
-                                switch (pointerInfo.type) {
-                                    case BABYLON.PointerEventTypes.POINTERDOWN:
-                                        if (pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh != ground) {
-                                            gizmoManager.rotationGizmoEnabled = true;
-                                            pointerDown(pointerInfo.pickInfo.pickedMesh)
-                                        }
-                                        break;
-                                    case BABYLON.PointerEventTypes.POINTERUP:
-                                        pointerUp();
-                                        break;
-                                    case BABYLON.PointerEventTypes.POINTERMOVE:
-                                        pointerMove();
-                                        break;
-                                }
-                            });
-                            //END DRAG
-
-                            //init gizmoManager
-                            const gizmoManager = new BABYLON.GizmoManager(scene)
-
-                            //rotationGizmo, rotate y axis
-                            gizmoManager.rotationGizmoEnabled = true;
-                            gizmoManager.gizmos.rotationGizmo.xGizmo.isEnabled = false;
-                            gizmoManager.gizmos.rotationGizmo.zGizmo.isEnabled = false;
-                            gizmoManager.gizmos.rotationGizmo.snapDistance = Math.PI / 4;
-                            gizmoManager.gizmos.rotationGizmo.attachedNode = null;
-                        });
-                    });
-
-                    let btnFloorWalls300 = document.getElementById("btnFloorWalls300");
-                    btnFloorWalls300.addEventListener("click", function ()
-                    {
-                        if (scene.getMeshByName(`editFloor3D`) != null) {
-                            scene.getMeshByName(`editFloor3D`).dispose();
-                            scene.getMeshByName(`editWalls3D`).dispose();
-                        }
-
-                        //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWall3d.stl", scene, function (newMeshes) {
-                        BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editFloor3D300.stl", scene, function (newMeshes) {
-                            // Set the target of the camera to the first imported mesh
-                            camera.target = newMeshes[0];
-
-                            newMeshes[0].name = 'editFloor3D';
-                            newMeshes[0].isPickable = false;
-                            newMeshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-
-                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editWalls3D300.stl", scene).then((result => {
-                                result.meshes[0].name = 'editWalls3D';
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                                result.meshes[0].isPickable = false;
-                            }));
-
-                            //START DRAG
-                            var ground = newMeshes[0];
-                            var startingPoint;
-                            var getGroundPosition = function () {
-                                var pickinfo = scene.pick(scene.pointerX, scene.pointerY, function (mesh) { return mesh == ground; });
-                                if (pickinfo.hit) {
-                                    return pickinfo.pickedPoint;
-                                }
-                                return null;
-                            }
-                            var pointerDown = function (mesh) {
-                                currentMesh = mesh;
-                                startingPoint = getGroundPosition();
-                                if (startingPoint) { // we need to disconnect camera from canvas
-                                    setTimeout(function () {
-                                        camera.detachControl(canvas);
-                                    }, 0);
-                                }
-                            }
-                            var pointerUp = function () {
-                                if (startingPoint) {
-                                    camera.attachControl(canvas, true);
-                                    startingPoint = null;
-                                    return;
-                                }
-                            }
-                            var pointerMove = function () {
-                                if (!startingPoint) {
-                                    return;
-                                }
-                                var current = getGroundPosition();
-                                if (!current) {
-                                    return;
-                                }
-                                var diff = current.subtract(startingPoint);
-                                currentMesh.position.addInPlace(diff);
-                                startingPoint = current;
-                            }
-                            scene.onPointerObservable.add((pointerInfo) => {
-                                switch (pointerInfo.type) {
-                                    case BABYLON.PointerEventTypes.POINTERDOWN:
-                                        if (pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh != ground) {
-                                            gizmoManager.rotationGizmoEnabled = true;
-                                            pointerDown(pointerInfo.pickInfo.pickedMesh)
-                                        }
-                                        break;
-                                    case BABYLON.PointerEventTypes.POINTERUP:
-                                        pointerUp();
-                                        break;
-                                    case BABYLON.PointerEventTypes.POINTERMOVE:
-                                        pointerMove();
-                                        break;
-                                }
-                            });
-                            //END DRAG
-
-                            //init gizmoManager
-                            const gizmoManager = new BABYLON.GizmoManager(scene)
-
-                            //rotationGizmo, rotate y axis
-                            gizmoManager.rotationGizmoEnabled = true;
-                            gizmoManager.gizmos.rotationGizmo.xGizmo.isEnabled = false;
-                            gizmoManager.gizmos.rotationGizmo.zGizmo.isEnabled = false;
-                            gizmoManager.gizmos.rotationGizmo.snapDistance = Math.PI / 4;
-                            gizmoManager.gizmos.rotationGizmo.attachedNode = null;
-                        });
-                    });
-
-
-
-                    // have button affect Babylon.js source (https://forum.babylonjs.com/t/how-to-communicate-between-an-external-button-and-babylon-scene/5885/6)
-                    let btneditCS4510Q = document.getElementById("btneditCS4510Q");
-                    btneditCS4510Q.addEventListener("click", function () {
-                        if (scene.getMeshByName(`editCS4510Q`) != null) {
-                            scene.getMeshByName(`editCS4510Q`).dispose();
-                        }
-                        else {
-                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editCS4510Q.stl", scene).then((result => {
-                                result.meshes[0].name = 'editCS4510Q';
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                                //result.meshes[0].addBehavior(drag);
-                                //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                            }));
-                        }
-                    });
-
-                    let btneditSinkv2 = document.getElementById("btneditSinkv2");
-                    btneditSinkv2.addEventListener("click", function () {
-                        if (scene.getMeshByName(`editSinkv2`) != null) {
-                            scene.getMeshByName(`editSinkv2`).dispose();
-                        }
-                        else {
-                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editSinkv2.stl", scene).then((result => {
-                                result.meshes[0].name = 'editSinkv2';
-                                result.meshes[0].position.y = 4;
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                                //result.meshes[0].addBehavior(drag);
-                                //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                            }));
-                        }
-                    });
-
-                    let btneditToilet = document.getElementById("btneditToilet");
-                    btneditToilet.addEventListener("click", function () {
-                        if (scene.getMeshByName(`editToilet`) != null) {
-                            scene.getMeshByName(`editToilet`).dispose();
-                        }
-                        else {
-                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToilet.stl", scene).then((result => {
-                                result.meshes[0].name = 'editToilet';
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                                //result.meshes[0].addBehavior(drag);
-                                //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                            }));
-                        }
-                    });
-
-                    let btneditToiletScan = document.getElementById("btneditToiletScan");
-                    btneditToiletScan.addEventListener("click", function () {
-                        if (scene.getMeshByName(`editToiletScan`) != null) {
-                            scene.getMeshByName(`editToiletScan`).dispose();
-                        }
-                        else {
-                            BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToiletScan.stl", scene).then((result => {
-                                result.meshes[0].name = 'editToiletScan';
-                                result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                                //result.meshes[0].addBehavior(drag);
-                                //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                            }));
-                        }
-                    });
-
-
-
-                    ////START DROPDOWN source (https://playground.babylonjs.com/#H10NI4#12)
-                    //var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-                    //var dropdownA = new Dropdown(advancedTexture, "30px", "180px");
-                    //dropdownA.button.children[0].text = "Select Model";
-                    //dropdownA.top = "0px"
-                    //dropdownA.left = "0px";
-                    //dropdownA.addOption(0, "CS4510Q.stl");
-                    //dropdownA.addOption(1, "Sinkv2.stl");
-                    //dropdownA.addOption(2, "Toilet.stl");
-                    //dropdownA.addOption(3, "ToiletScan.stl");
-
-                    //dropdownA.options.children[0].onPointerClickObservable.add(function () {
-                    //    if (scene.getMeshByName(`editCS4510Q`) != null) {
-                    //        scene.getMeshByName(`editCS4510Q`).dispose();
-                    //    }
-                    //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editCS4510Q.stl", scene).then((result => {
-                    //            result.meshes[0].name = 'editCS4510Q';
-                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                    //            //result.meshes[0].addBehavior(drag);
-                    //            //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                    //        }));
-                    //    }
-                    //});
-                    //dropdownA.options.children[1].onPointerClickObservable.add(function () {
-                    //    if (scene.getMeshByName(`editSinkv2`) != null) {
-                    //        scene.getMeshByName(`editSinkv2`).dispose();
-                    //    }
-                    //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editSinkv2.stl", scene).then((result => {
-                    //            result.meshes[0].name = 'editSinkv2';
-                    //            result.meshes[0].position.y = 4;
-                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                    //            //result.meshes[0].addBehavior(drag);
-                    //        }));
-                    //    }
-                    //});
-                    //dropdownA.options.children[2].onPointerClickObservable.add(function () {
-                    //    if (scene.getMeshByName(`editToilet`) != null) {
-                    //        scene.getMeshByName(`editToilet`).dispose();
-                    //    }
-                    //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToilet.stl", scene).then((result => {
-                    //            result.meshes[0].name = 'editToilet';
-                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                    //            //result.meshes[0].addBehavior(drag);
-                    //        }));
-                    //    }
-                    //});
-                    //dropdownA.options.children[3].onPointerClickObservable.add(function () {
-                    //    if (scene.getMeshByName(`editToiletScan`) != null) {
-                    //        scene.getMeshByName(`editToiletScan`).dispose();
-                    //    }
-                    //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToiletScan.stl", scene).then((result => {
-                    //            result.meshes[0].name = 'editToiletScan';
-                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                    //            //result.meshes[0].addBehavior(drag);
-                    //        }));
-                    //    }
-                    //});
-                    //// END  DROPDOWN
-
-                    //// add a button source (https://playground.babylonjs.com/#79ASTG)
-                    //let button = document.createElement("button");
-                    //button.textContent = "add/remove editCS4510Q.stl";
-                    //button.type = "button";
-                    //button.style.position = "fixed";
-                    //button.style.textAlign = "right";
-                    //button.style.top = "0";
-                    //button.style.right = "0";
-                    //button.style.zIndex = 1000;
-                    //button.addEventListener("click", function () {
-                    //    if (scene.getMeshByName(`editCS4510Q`) != null) {
-                    //        scene.getMeshByName(`editCS4510Q`).dispose();
-                    //    }
-                    //    else {
-                    //        BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editCS4510Q.stl", scene).then((result => {
-                    //            result.meshes[0].name = 'editCS4510Q';
-                    //            result.meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); //scaling to 1/10 size
-                    //            //result.meshes[0].addBehavior(drag);
-                    //            //result.meshes[0].scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); //scaling to half size
-                    //        }));
-                    //    }
-                    //});
-                    //canvas.parentElement.appendChild(button);
-                    //// cleanup
-                    //scene.onDisposeObservable.add(() => {
-                    //    button.remove();
-                    //})
-
-                    return scene;
-                };
-
-                //START DROPDOWN source (https://playground.babylonjs.com/#H10NI4#12)
-                var Dropdown = (function () {
-                    function Dropdown(advancedTexture, height, width, color, background) {
-                        // Members
-                        this.height = height;
-                        this.width = width;
-                        this.color = color || "black";
-                        this.background = background || "white";
-
-                        this.advancedTexture = advancedTexture;
-
-                        // Container
-                        this.container = new BABYLON.GUI.Container();
-                        this.container.width = this.width;
-                        this.container.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-                        this.container.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-                        this.container.isHitTestVisible = false;
-
-                        // Primary button
-                        this.button = BABYLON.GUI.Button.CreateSimpleButton(null, "Please Select");
-                        this.button.height = this.height;
-                        this.button.background = this.background;
-                        this.button.color = this.color;
-                        this.button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-
-                        // Options panel
-                        this.options = new BABYLON.GUI.StackPanel();
-                        this.options.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-                        this.options.top = this.height;
-                        this.options.isVisible = false;
-                        this.options.isVertical = true;
-
-                        var _this = this;
-                        this.button.onPointerUpObservable.add(function () {
-                            _this.options.isVisible = !_this.options.isVisible;
-                        });
-
-                        // add controls
-                        this.advancedTexture.addControl(this.container);
-                        this.container.addControl(this.button);
-                        this.container.addControl(this.options);
-
-                        // Selection
-                        this.selected = null;
-                        this.selectedValue = null;
+                    else if (pointerInfo.pickInfo.pickedMesh != ground) {
+                        gizmoManager.rotationGizmoEnabled = false;
+                        gizmoManager.positionGizmoEnabled = false;
+                        gizmoManagerDRC.positionGizmoEnabled = false;
+                        gizmoManagerDRC.rotationGizmoEnabled = false;
                     }
-                    Object.defineProperty(Dropdown.prototype, 'top', {
-                        get: function () {
-                            return this.container.top;
-                        },
-                        set: function (value) {
-                            this.container.top = value;
-                        },
-                        enumerable: true,
-                        configurable: true
-                    });
-                    Object.defineProperty(Dropdown.prototype, 'left', {
-                        get: function () {
-                            return this.container.left;
-                        },
-                        set: function (value) {
-                            this.container.left = value;
-                        },
-                        enumerable: true,
-                        configurable: true
-                    });
-                    Dropdown.prototype.addOption = function (value, text, color, background) {
-                        var _this = this;
-                        var button = BABYLON.GUI.Button.CreateSimpleButton(text, text);
-                        button.height = _this.height;
-                        button.paddingTop = "-1px";
-                        button.background = background || _this.background;
-                        button.color = color || _this.color;
-                        button.onPointerUpObservable.add(function () {
-                            _this.options.isVisible = false;
-                            _this.button.children[0].text = text;
-                            _this.selected = button;
-                            _this.selectedValue = value;
-                        });
-                        this.options.addControl(button);
-                    };
-                    return Dropdown;
-                }());
-                // END  DROPDOWN
+                    break;
+                case BABYLON.PointerEventTypes.POINTERUP:
+                    pointerUp();
+                    break;
+                case BABYLON.PointerEventTypes.POINTERMOVE:
+                    pointerMove();
+                    break;
+            }
+        });
+    } //DRAG Model on Ground
 
-                window.initFunction = async function ()
-                {
-                    var asyncEngineCreation = async function ()
-                    {
-                        try
-                        {
-                            return createDefaultEngine();
-                        }
-                        catch (e)
-                        {
-                            console.log("the available createEngine function failed. Creating the default engine instead");
-                            return createDefaultEngine();
+    //loading Message
+    // Create full screen UI.
+    const uiTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    // Create bottom line of text.
+    const bottomLine = new BABYLON.GUI.TextBlock();
+    bottomLine.color = "black";
+    bottomLine.fontSize = 24;
+    bottomLine.top = "45%";
+    uiTexture.addControl(bottomLine);
+    // Names for the LODs.
+    const lodNames = ["Low", "Medium", "High"];
+    // The index of the next LOD to load.
+    let lodNext = null;
+    // Disable the loading screen since the UI text will show progress.
+    BABYLON.SceneLoader.ShowLoadingScreen = false;
+    // Register for loader 
+    BABYLON.SceneLoader.OnPluginActivatedObservable.addOnce(function (loader) {
+        // This is just a precaution as this isn't strictly necessary since
+        // the only loader in use is the glTF one.
+        if (loader.name !== "gltf") return;
+        // See what the loader is doing in the console.
+        loader.loggingEnabled = false;
+        // Use HTTP range requests to load the glTF binary (GLB) in parts.
+        loader.useRangeRequests = true;
+        // Register for when extension are loaded.
+        loader.onExtensionLoadedObservable.add(function (extension) {
+            // Ignore extensions except MSFT_lod.
+            if (extension.name !== "MSFT_lod") return;
+            // Extensions are loaded after glTF has been parsed and
+            // thus it is now loading the first LOD.
+            lodNext = 0;
+            // Update the status text and next LOD index when each set
+            // of LODs are loaded.
+            extension.onMaterialLODsLoadedObservable.add(function (index) {
+                lodNext = index + 1;
+            });
+            // Uncomment the following line to stop at the specified LOD.
+            //extension.maxLODsToLoad = 1;
+        });
+        // Update the status text when loading is complete, i.e. when
+        // all the LODs are loaded.
+        loader.onCompleteObservable.add(function () {
+            bottomLine.text = "Loading Complete";
+            setTimeout(function () {
+                bottomLine.text = "";
+            }, 3000);
+        });
+    });
+    function loadingMessage() {
+        // Compute the percentage for each stage unless the length is not computable.
+        // The lengthComputable is often false when serving content that is gzipped.
+        const percentage = event.lengthComputable ? " " + Math.floor(event.loaded / event.total * 100) + "%" : "";
+        // Check if an LOD is loading yet.
+        if (lodNext === null) {
+            // Ignore GLB header progress.
+            if (event.total === 20) return;
+            // Show that the glTF is downloading.
+            bottomLine.text = "Loading :" + percentage;
+        }
+        else {
+            // Show that the LOD is downloading.
+            bottomLine.text = "Loading :" + percentage;
+        }
+    } //loading Message
+
+	
+    return scene;
+};
+
+
+
+var Dropdown = (function () { //START DROPDOWN
+    function Dropdown(advancedTexture, height, width, color, background) {
+        // Members
+        this.height = height;
+        this.width = width;
+        this.color = color || "black";
+        this.background = background || "white";
+
+        this.advancedTexture = advancedTexture;
+
+        // Container
+        this.container = new BABYLON.GUI.Container();
+        this.container.width = this.width;
+        this.container.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        this.container.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        //this.container.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        //this.container.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+        this.container.isHitTestVisible = false;
+
+        // Primary button
+        this.button = BABYLON.GUI.Button.CreateSimpleButton(null, "Please Select");
+        this.button.height = this.height;
+        this.button.background = this.background;
+        this.button.color = this.color;
+        this.button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+
+        // Options panel
+        this.options = new BABYLON.GUI.StackPanel();
+        this.options.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        this.options.top = this.height;
+        this.options.isVisible = false;
+        this.options.isVertical = true;
+
+        var _this = this;
+        this.button.onPointerUpObservable.add(function () {
+            _this.options.isVisible = !_this.options.isVisible;
+        });
+
+        // add controls
+        this.advancedTexture.addControl(this.container);
+        this.container.addControl(this.button);
+        this.container.addControl(this.options);
+
+        // Selection
+        this.selected = null;
+        this.selectedValue = null;
+    }
+    Object.defineProperty(Dropdown.prototype, 'top', {
+        get: function () {
+            return this.container.top;
+        },
+        set: function (value) {
+            this.container.top = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Dropdown.prototype, 'left', {
+        get: function () {
+            return this.container.left;
+        },
+        set: function (value) {
+            this.container.left = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Dropdown.prototype.addOption = function (value, text, color, background) {
+        var _this = this;
+        var button = BABYLON.GUI.Button.CreateSimpleButton(text, text);
+        button.height = _this.height;
+        button.paddingTop = "-1px";
+        button.background = background || _this.background;
+        button.color = color || _this.color;
+        button.onPointerUpObservable.add(function () {
+            _this.options.isVisible = false;
+            _this.button.children[0].text = text;
+            _this.selected = button;
+            _this.selectedValue = value;
+        });
+        this.options.addControl(button);
+    };
+    return Dropdown;
+}()); // END  DROPDOWN
+                window.initFunction = async function() {
+                    
+                    
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
                         }
                     }
 
                     window.engine = await asyncEngineCreation();
-                    if (!engine) throw 'engine should not be null.';
-                    startRenderLoop(engine, canvas);
-                    window.scene = createScene();
-                };
-                initFunction().then(() =>
-                {
-                    sceneToRender = scene
-                });
+        if (!engine) throw 'engine should not be null.';
+        startRenderLoop(engine, canvas);
+        window.scene = createScene();};
+        initFunction().then(() => {sceneToRender = scene                    
+        });
 
-                // Resize
-                window.addEventListener("resize", function ()
-                {
-                    engine.resize();
-                });
-            </script>
-
-            <!-- ------------------------------------------------------- END Babylon.js ------------------------------------------------------- -->
-
-        </div>
-
-    </form>
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
 </body>
 </html>
