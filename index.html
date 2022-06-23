@@ -56,15 +56,15 @@
         var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
         var createScene = function () {
 
-    console.log = function () { }
+    console.log = function () { console.clear(); }
 
     // This creates a basic Babylon Scene object (non-mesh)
     const scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3(211 / 255, 211 / 255, 211 / 255);
 
     //var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/environment.dds", scene);
-    var hdrTexture = new BABYLON.HDRCubeTexture("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/room.hdr", scene, 512);
-    //var hdrTexture = new BABYLON.CubeTexture("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/skybox", scene);
+    //var hdrTexture = new BABYLON.HDRCubeTexture("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/room.hdr", scene, 512);
+    var hdrTexture = new BABYLON.CubeTexture("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/skybox", scene);
     var currentSkybox = scene.createDefaultSkybox(hdrTexture, true);
 
     //enable Physics
@@ -83,6 +83,12 @@
     camera.wheelPrecision = 100.00;
     scene.activeCamera.pinchDeltaPercentage = 0.00001;
     scene.activeCamera.lowerRadiusLimit = 1;
+    camera.useBouncingBehavior = true;
+    //camera.inputs.attached.pointers.buttons = [0];
+    camera._panningMouseButton = 3;
+    camera.buttons = [0, 1, 0];
+    camera.inputs.attached.pointers.multiTouchPanAndZoom = false;
+    camera.inputs.attached.pointers.multiTouchPanning = false;
 
     // This creates a light, aiming 1, 1, 0
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
@@ -98,9 +104,9 @@
     dropdownA.addOption(2, "editRoom_floor.glb");
     // Child 0 / "Option A"
     dropdownA.options.children[0].onPointerClickObservable.add(function () {
-        if (scene.getMeshByName('editFloor3D') != null) {
-            scene.getMeshByName('editFloor3D').dispose();
-            scene.getMeshByName('editWalls3D').dispose();
+        if (scene.getMeshByName('editFloor3D') != null && scene.getMeshByName('editWalls3D') != null) {
+            scene.getMeshByName('editFloor3D').dispose(false, true);
+            scene.getMeshByName('editWalls3D').dispose(false, true);
         }
         //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "FILENAME", scene, function (newMeshes) {
         BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editFloor3D.stl", scene).then((result => {
@@ -121,9 +127,9 @@
         dropdownA.selected = 0;
     });
     dropdownA.options.children[1].onPointerClickObservable.add(function () {
-        if (scene.getMeshByName('editFloor3D') != null) {
-            scene.getMeshByName('editFloor3D').dispose();
-            scene.getMeshByName('editWalls3D').dispose();
+        if (scene.getMeshByName('editFloor3D') != null && scene.getMeshByName('editWalls3D') != null) {
+            scene.getMeshByName('editFloor3D').dispose(false, true);
+            scene.getMeshByName('editWalls3D').dispose(false, true);
         }
         //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "FILENAME", scene, function (newMeshes) {
         BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editFloor3D300.stl", scene).then((result => {
@@ -145,9 +151,9 @@
         }));
     });
     dropdownA.options.children[2].onPointerClickObservable.add(function () {
-        if (scene.getMeshByName('editFloor3D') != null) {
-            scene.getMeshByName('editFloor3D').dispose();
-            scene.getMeshByName('editWalls3D').dispose();
+        if (scene.getMeshByName('editFloor3D') != null && scene.getMeshByName('editWalls3D') != null) {
+            scene.getMeshByName('editFloor3D').dispose(false, true);
+            scene.getMeshByName('editWalls3D').dispose(false, true);
         }
         //BABYLON.SceneLoader.ImportMesh("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "FILENAME", scene, function (newMeshes) {
         BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editRoom_floor.glb", scene).then((result => {
@@ -179,9 +185,10 @@
     btnClear.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
     btnClear.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     btnClear.onPointerUpObservable.add(function () {
-        //alert("you did it!");
-        while (scene.meshes.length >= 2) {
-            scene.meshes[scene.meshes.length - 1].dispose();
+        //alert("button clicked!");
+        for (var i = 1; i < scene.meshes.length; i++) {
+            scene.meshes[i].dispose(false, true);
+            i--;
         }
     });
     advancedTexture.addControl(btnClear);
@@ -205,7 +212,7 @@
     // Child 0 / "Option A"
     dropdownA.options.children[0].onPointerClickObservable.add(function () {
         if (scene.getMeshByName('editCS4510Q') != null) {
-            scene.getMeshByName('editCS4510Q').dispose();
+            scene.getMeshByName('editCS4510Q').dispose(false, true);
         }
         else {
             BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editCS4510Q.stl", scene,
@@ -219,7 +226,7 @@
     });
     dropdownA.options.children[1].onPointerClickObservable.add(function () {
         if (scene.getMeshByName('editSinkv2') != null) {
-            scene.getMeshByName('editSinkv2').dispose();
+            scene.getMeshByName('editSinkv2').dispose(false, true);
         }
         else {
             BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editSinkv2.stl", scene,
@@ -227,14 +234,14 @@
                     bottomLine.text = "";
                     result.meshes[0].name = 'editSinkv2';
                     result.meshes[0].isPickable = true;
-                    result.meshes[0].position.y = 0.95;
+                    //result.meshes[0].position.y = 0.95;
                     result.meshes[0].scaling = new BABYLON.Vector3(0.015, 0.015, 0.015); //scaling to 1.5% size
                 }));
         }
     });
     dropdownA.options.children[2].onPointerClickObservable.add(function () {
         if (scene.getMeshByName('editToilet') != null) {
-            scene.getMeshByName('editToilet').dispose();
+            scene.getMeshByName('editToilet').dispose(false, true);
         }
         else {
             BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToilet.stl", scene,
@@ -248,7 +255,7 @@
     });
     dropdownA.options.children[3].onPointerClickObservable.add(function () {
         if (scene.getMeshByName('editToiletScan') != null) {
-            scene.getMeshByName('editToiletScan').dispose();
+            scene.getMeshByName('editToiletScan').dispose(false, true);
         }
         else {
             BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "editToiletScan.stl", scene,
@@ -262,7 +269,7 @@
     });
     dropdownA.options.children[4].onPointerClickObservable.add(function () {
         if (scene.getMeshByName('DracoCS4510Q') != null) {
-            scene.getMeshByName('DracoCS4510Q').dispose();
+            scene.getMeshByName('DracoCS4510Q').dispose(false, true);
         }
         else {
             BABYLON.Tools.LoadFile("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/editCS4510Q.stl.drc", async function (data) {
@@ -285,7 +292,7 @@
     });
     dropdownA.options.children[5].onPointerClickObservable.add(function () {
         if (scene.getMeshByName('DracoSinkv2') != null) {
-            scene.getMeshByName('DracoSinkv2').dispose();
+            scene.getMeshByName('DracoSinkv2').dispose(false, true);
         }
         else {
             BABYLON.Tools.LoadFile("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/editSinkv2.stl.drc", async function (data) {
@@ -308,7 +315,7 @@
     });
     dropdownA.options.children[6].onPointerClickObservable.add(function () {
         if (scene.getMeshByName('DracoToilet') != null) {
-            scene.getMeshByName('DracoToilet').dispose();
+            scene.getMeshByName('DracoToilet').dispose(false, true);
         }
         else {
             BABYLON.Tools.LoadFile("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/editToilet.stl.drc", async function (data) {
@@ -331,7 +338,7 @@
     });
     dropdownA.options.children[7].onPointerClickObservable.add(function () {
         if (scene.getMeshByName('DracoToiletScan') != null) {
-            scene.getMeshByName('DracoToiletScan').dispose();
+            scene.getMeshByName('DracoToiletScan').dispose(false, true);
         }
         else {
             BABYLON.Tools.LoadFile("https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/editToiletScan.stl.drc", async function (data) {
@@ -354,12 +361,13 @@
     });
     dropdownA.options.children[8].onPointerClickObservable.add(function () {
         if (scene.getMeshByName('Toilet_Shade') != null) {
-            scene.getMeshByName('Toilet_Shade').dispose();
+            scene.getMeshByName('Toilet_Shade').dispose(false, true);
         }
         else {
             BABYLON.SceneLoader.ImportMeshAsync("", "https://raw.githubusercontent.com/cp-canare/Babylon.js_1/master/", "Toilet_Shade.glb", scene,
                 function (event) { loadingMessage(); }).then((result => {
                     bottomLine.text = "";
+                    for (var i = 0; i < result.meshes.length; i++) { result.meshes[i].name = 'Toilet_Shade' + [i]; }
                     result.meshes[0].name = 'Toilet_Shade';
 
                     var edit1 = result.meshes[0];
@@ -407,27 +415,6 @@
         if (gizmoManager.gizmos.positionGizmo.attachedMesh.position.y > 2) { gizmoManager.gizmos.positionGizmo.attachedMesh.position.y = 2; }
     });
 
-    //init DRC gizmoManager
-    const gizmoManagerDRC = new BABYLON.GizmoManager(scene)
-
-    // STL & GLB rotationGizmo, rotate y axis
-    gizmoManagerDRC.rotationGizmoEnabled = true;
-    gizmoManagerDRC.gizmos.rotationGizmo.xGizmo.isEnabled = false;
-    gizmoManagerDRC.gizmos.rotationGizmo.yGizmo.isEnabled = false;
-    gizmoManagerDRC.gizmos.rotationGizmo.snapDistance = Math.PI / 4;
-    gizmoManagerDRC.gizmos.rotationGizmo.attachedNode = null;
-
-    // STL & GLB positionGizmo, move along x, y, z axis
-    gizmoManagerDRC.positionGizmoEnabled = true;
-    gizmoManagerDRC.gizmos.positionGizmo.xGizmo.isEnabled = false;
-    gizmoManagerDRC.gizmos.positionGizmo.yGizmo.isEnabled = false;
-    gizmoManagerDRC.gizmos.positionGizmo.zGizmo.dragBehavior.onDragObservable.add(() => {
-        //set floor to y = 0, stop mesh from going below y = 0
-        if (gizmoManagerDRC.gizmos.positionGizmo.attachedMesh.position.y < 0) { gizmoManagerDRC.gizmos.positionGizmo.attachedMesh.position.y = 0; }
-        //set ceiling to y = 2, stop mesh from going above y = 2
-        if (gizmoManagerDRC.gizmos.positionGizmo.attachedMesh.position.y > 2) { gizmoManagerDRC.gizmos.positionGizmo.attachedMesh.position.y = 2; }
-    });
-
     function dragModel(ground) { //DRAG Model on Ground
         var startingPoint;
         var getGroundPosition = function () {
@@ -471,9 +458,7 @@
                     if (pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh != ground) {
                         gizmoManager.rotationGizmoEnabled = true;
                         gizmoManager.positionGizmoEnabled = true;
-                        gizmoManagerDRC.positionGizmoEnabled = false;
-                        gizmoManagerDRC.rotationGizmoEnabled = false;
-                        if (pointerInfo.pickInfo.pickedMesh.name.includes('Circle.007')) {
+                        if (pointerInfo.pickInfo.pickedMesh.name.includes('Toilet_Shade')) {
                             pointerDown(scene.getMeshByName('Toilet_Shade'))
                         }
                         else {
@@ -483,8 +468,6 @@
                     else if (pointerInfo.pickInfo.pickedMesh != ground) {
                         gizmoManager.rotationGizmoEnabled = false;
                         gizmoManager.positionGizmoEnabled = false;
-                        gizmoManagerDRC.positionGizmoEnabled = false;
-                        gizmoManagerDRC.rotationGizmoEnabled = false;
                     }
                     break;
                 case BABYLON.PointerEventTypes.POINTERUP:
@@ -562,7 +545,35 @@
         }
     } //loading Message
 
-	
+
+
+    //KEYBOARD
+    scene.onKeyboardObservable.add((kbInfo) => {
+        switch (kbInfo.type) {
+            case BABYLON.KeyboardEventTypes.KEYDOWN:
+                switch (kbInfo.event.key) {
+                    case "a":
+                    case "A":
+                        console.log("KEY DOWN: ", kbInfo.event.key);
+                        break;
+                    case "d":
+                    case "D":
+                        console.log("KEY DOWN: ", kbInfo.event.key);
+                        break;
+                    case "w":
+                    case "W":
+                        console.log("KEY DOWN: ", kbInfo.event.key);
+                        break;
+                    case "s":
+                    case "S":
+                        console.log("KEY DOWN: ", kbInfo.event.key);
+                        break;
+                }
+                break;
+        }
+    });
+    //KEYBOARD
+
     return scene;
 };
 
